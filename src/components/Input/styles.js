@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 export const Container = styled.div`
   text-align: left;
   div {
-    margin-bottom: 0.5rem;
     span {
       color: #c53030;
       font-size: 14px;
