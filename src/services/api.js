@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://api-nodejs-todolist.herokuapp.com",
+  baseURL: "https://json-server-doit.herokuapp.com",
 });
 
 export default api;

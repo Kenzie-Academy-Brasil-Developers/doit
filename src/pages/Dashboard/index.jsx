@@ -14,6 +14,10 @@ function Dashboard({ authenticated }) {
   const [token] = useState(
     JSON.parse(localStorage.getItem("@Doit:token")) || ""
   );
+  const [user] = useState(
+    JSON.parse(localStorage.getItem("@Doit:user")) || "{}"
+  );
+
 
   const {
     register,
@@ -23,23 +27,26 @@ function Dashboard({ authenticated }) {
 
   function loadTasks() {
     api
-      .get("/task", {
+      .get(`/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           completed: false,
+          userId: user.id
         },
       })
       .then((response) => {
-        const apiTasks = response.data.data.map((task) => ({
-          ...task,
-          createdAt: new Date(task.createdAt).toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          }),
-        }));
+        const apiTasks = response.data.map((task) => {
+          return {
+            ...task,
+            createdAt: new Date(task.created_at).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            }),
+          };
+        });
 
         setTasks(apiTasks);
       });
@@ -58,12 +65,17 @@ function Dashboard({ authenticated }) {
       return toast.error("Complete o campo para enviar a tarefa");
     }
 
+    const data = { 
+      description: task,
+      userId: user.id,
+      completed: false,
+      created_at: new Date()
+    }
+
     api
       .post(
-        "/task",
-        {
-          description: task,
-        },
+        "/tasks",
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,14 +86,12 @@ function Dashboard({ authenticated }) {
   };
 
   const handleCompleted = (id) => {
-    const newTasks = tasks.filter((task) => task._id !== id);
-
-    console.log(newTasks);
+    const newTasks = tasks.filter((task) => task.id !== id);
 
     api
-      .put(
-        `/task/${id}`,
-        { completed: true },
+      .patch(
+        `/tasks/${id}`,
+        { completed: true, userId: user.id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +104,7 @@ function Dashboard({ authenticated }) {
   return (
     <Container>
       <InputContainer onSubmit={handleSubmit(onSubmit)}>
-        <time>7 de maio de 2021</time>
+        <time>{new Date().toLocaleDateString('pt-BR')}</time>
         <section>
           <Input
             icon={FiEdit2}
@@ -112,7 +122,7 @@ function Dashboard({ authenticated }) {
             key={task._id}
             title={task.description}
             date={task.createdAt}
-            onClick={() => handleCompleted(task._id)}
+            onClick={() => handleCompleted(task.id)}
           />
         ))}
       </TasksContainer>

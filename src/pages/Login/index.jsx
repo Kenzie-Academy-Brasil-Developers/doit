@@ -29,11 +29,13 @@ function Login({ authenticated, setAuthenticated }) {
 
   const onSubmit = (data) => {
     api
-      .post("/user/login", data)
+      .post("/login", data)
       .then((response) => {
-        const { token } = response.data;
+        const { accessToken, user } = response.data;
 
-        localStorage.setItem("@Doit:token", JSON.stringify(token));
+        localStorage.setItem("@Doit:token", JSON.stringify(accessToken));
+        localStorage.setItem("@Doit:user", JSON.stringify(user));
+
 
         setAuthenticated(true);
 

@@ -13,6 +13,8 @@ export const InputContainer = styled.form`
   padding: 0 38px;
 
   section {
+    margin-top: 8px;
+
     display: flex;
 
     > div {

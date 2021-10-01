@@ -42,7 +42,7 @@ function Signup({ authenticated }) {
 
   const onSubmit = (data) => {
     api
-      .post("/user/register", data)
+      .post("/register", data)
       .then((response) => {
         toast.success("Sucesso ao criar usuário");
         return history.push("/login");
