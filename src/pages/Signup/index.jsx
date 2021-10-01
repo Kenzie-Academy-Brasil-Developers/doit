@@ -45,7 +45,7 @@ function Signup({ authenticated }) {
       .post("/register", data)
       .then((response) => {
         toast.success("Sucesso ao criar usuário");
-        return history.push("/login");
+        history.push("/login");
       })
       .catch((err) => toast.error("Erro ao criar usuário, email duplicado"));
   };

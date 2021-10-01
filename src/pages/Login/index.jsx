@@ -39,7 +39,9 @@ function Login({ authenticated, setAuthenticated }) {
 
         setAuthenticated(true);
 
-        return history.push("/dashboard");
+        toast.success("Login feito com sucesso")
+        
+        history.push("/dashboard");
       })
       .catch((err) => toast.error("Email ou senha inválidos"));
   };
