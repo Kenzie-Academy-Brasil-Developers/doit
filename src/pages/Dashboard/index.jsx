@@ -18,7 +18,6 @@ function Dashboard({ authenticated }) {
     JSON.parse(localStorage.getItem("@Doit:user")) || "{}"
   );
 
-
   const {
     register,
     formState: { errors },
@@ -33,14 +32,14 @@ function Dashboard({ authenticated }) {
         },
         params: {
           completed: false,
-          userId: user.id
+          userId: user.id,
         },
       })
       .then((response) => {
         const apiTasks = response.data.map((task) => {
           return {
             ...task,
-            createdAt: new Date(task.created_at).toLocaleDateString("pt-BR", {
+            created_at: new Date(task.created_at).toLocaleDateString("pt-BR", {
               day: "2-digit",
               month: "long",
               year: "numeric",
@@ -65,24 +64,30 @@ function Dashboard({ authenticated }) {
       return toast.error("Complete o campo para enviar a tarefa");
     }
 
-    const data = { 
+    const data = {
       description: task,
       userId: user.id,
       completed: false,
-      created_at: new Date()
-    }
-
+      created_at: new Date(),
+    };
     api
-      .post(
-        "/tasks",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => loadTasks());
+      .post("/tasks", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const formattedData = {
+          ...response.data,
+          created_at: new Date(response.data.created_at).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          }),
+        };
+
+        setTasks([...tasks, formattedData]);
+      });
   };
 
   const handleCompleted = (id) => {
@@ -104,7 +109,7 @@ function Dashboard({ authenticated }) {
   return (
     <Container>
       <InputContainer onSubmit={handleSubmit(onSubmit)}>
-        <time>{new Date().toLocaleDateString('pt-BR')}</time>
+        <time>{new Date().toLocaleDateString("pt-BR")}</time>
         <section>
           <Input
             icon={FiEdit2}
@@ -119,9 +124,9 @@ function Dashboard({ authenticated }) {
       <TasksContainer>
         {tasks.map((task) => (
           <Card
-            key={task._id}
+            key={task.id}
             title={task.description}
-            date={task.createdAt}
+            date={task.created_at}
             onClick={() => handleCompleted(task.id)}
           />
         ))}

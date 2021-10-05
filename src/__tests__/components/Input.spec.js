@@ -1,29 +1,32 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
-
+import { render, screen } from "@testing-library/react";
 import Input from "../../components/Input";
 
-describe("Input component", () => {
-  it("should be able to render an input", () => {
-    const { getByPlaceholderText } = render(
-      <Input name="email" placeholder="E-mail" error="" register={jest.fn()} />
+describe("Input Component", () => {
+  test("should be able to render an input", () => {
+    render(
+      <Input error="" name="Email" placeholder="Email" register={() => {}} />
     );
 
-    expect(getByPlaceholderText("E-mail")).toBeTruthy();
+    expect(screen.getByPlaceholderText("Email")).toBeTruthy();
   });
 
-  it("should be able to render an error", async () => {
-    const { getByText } = render(
+  test("should be able to render an error", () => {
+    render(
       <Input
-        name="email"
-        placeholder="E-mail"
         error="Campo obrigatório"
-        register={jest.fn()}
+        name="Email"
+        placeholder="Email"
+        register={() => {}}
       />
     );
 
-    const error = getByText(/Campo obrigatório/);
+    const error = screen.getByText(/Campo obrigatório/);
+
+    // desenvolver a busca por um estilo diferente
 
     expect(error).toBeInTheDocument();
+
+    // esperar que o estilo esteja em tela
   });
 });
