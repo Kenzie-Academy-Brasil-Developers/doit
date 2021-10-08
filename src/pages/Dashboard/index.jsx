@@ -121,7 +121,7 @@ function Dashboard({ authenticated }) {
           <Button type="submit"> Adicionar</Button>
         </section>
       </InputContainer>
-      <TasksContainer>
+      <TasksContainer data-testid="tasks-container">
         {tasks.map((task) => (
           <Card
             key={task.id}
